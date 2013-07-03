@@ -1,0 +1,21 @@
+(dp1
+S'output'
+p2
+S'<class \'_mysql_exceptions.OperationalError\'> (1050, "Table \'auth_user\' already exists")'
+p3
+sS'layer'
+p4
+S'/var/www/agenda/applications/projeto/models/config.py'
+p5
+sS'code'
+p6
+S'from gluon.storage import Storage\n\nconfig = Storage(\n        db=Storage(),\n        auth=Storage(),\n        mail=Storage()\n        )\n\nconfig.db.uri = "mysql://root:yma2578k@localhost/admanager"\n#config.db.uri = "postgres:pg8000://postgres:123456@127.0.0.1/agenda"\n#config.db.uri = "sqlite://hosts.sqlite"\nconfig.db.pool_size = 10\nconfig.db.check_reserved = [\'all\']\nconfig.migrate_enable=False\n\n\ndb = DAL(**config.db)\n\n# logging\nimport logging\nlogger = logging.getLogger("web2py.app.blog")\nlogger.setLevel(logging.DEBUG)\n\n#auth Rbac\nfrom gluon.tools import Auth\n\nauth = Auth(db, controller="initial", function="user")\n\n#settings\nauth.settings.remember_me_form = False\nauth.settings.formstyle = "divs"\nauth.settings.login_next = URL(\'initial\', \'principal\')\nauth.settings.logout_next = URL(\'user\', \'login?_next=\')\nauth.settings.registration_requires_verification = False\nauth.settings.registration_requires_approval = False\n#auth.settings.actions_disabled = [\'register\']\nauth.messages.logged_in = \'Bem Vindo\' \nauth.messages.logged_out = \'At\xc3\xa9 logo\'\nauth.messages.access_denied = \'Acesso negado! Contate o administrador\'\nauth.messages.invalid_email = \'email Inv\xc3\xa1lido\'\nauth.messages.invalid_login = \'Login Inv\xc3\xa1lido\'\n\n#mail\nmail = auth.settings.mailer\nmail.settings.server = "mail.ad2.com.br:587"\nmail.settings.sender = "smtp_avisos@ad2.com.br"\nmail.settings.login = "smtp_avisos@ad2.com.br:ad2root"\n\n\n#signals\ndef notifica(form):\n\tlogger.info("notifica")\n\tmail.send(\n\t\tto="fndiaz02@gmail.com",\n\t\tsubject="Usuario %(first_name)s pendente" % form.vars,\n\t\tmessage="<html>Voce tem um novo usuario para aprovacao %(first_name)s %(last_name)s </html>" % form.vars\n\t)\n\n#auth.settings.register_onaccept = notifica\n#auth.settings.register_onaccept = funcao\n\n#messages\nauth.messages.login_button = "Entrar"\n\n#fields\n#auth.settings.extra_fields[\'auth_user\'] = [\n#\tField("bio", "text"),\n#\tField("photo", "upload"),\n#\tField("gender", requires=IS_IN_SET(["masculino","feminino"]))\n#]\n\n#janrain\n#from gluon.contrib.login_methods.rpx_account import use_janrain\n#use_janrain(auth, filename="private/janrain.key")\n\nauth.define_tables(username=False)\n\n#genericas views\nif request.is_local:\n\tresponse.generic_patterns = [\'*\']\n\n#response\nresponse.title= "titulo response"\nresponse.meta.keywords= "chave, outra, e outra"'
+p7
+sS'snapshot'
+p8
+(dp9
+sS'traceback'
+p10
+S'Traceback (most recent call last):\n  File "/var/www/agenda/gluon/restricted.py", line 212, in restricted\n    exec ccode in environment\n  File "/var/www/agenda/applications/projeto/models/config.py", line 76, in <module>\n    auth.define_tables(username=False)\n  File "/var/www/agenda/gluon/tools.py", line 1558, in define_tables\n    format=\'%(first_name)s %(last_name)s (%(id)s)\'))\n  File "/var/www/agenda/gluon/dal.py", line 7186, in define_table\n    table = self.lazy_define_table(tablename,*fields,**args)\n  File "/var/www/agenda/gluon/dal.py", line 7222, in lazy_define_table\n    polymodel=polymodel)\n  File "/var/www/agenda/gluon/dal.py", line 935, in create_table\n    self.create_sequence_and_triggers(query,table)\n  File "/var/www/agenda/gluon/dal.py", line 1694, in create_sequence_and_triggers\n    self.execute(query)\n  File "/var/www/agenda/gluon/dal.py", line 1709, in execute\n    return self.log_execute(*a, **b)\n  File "/var/www/agenda/gluon/dal.py", line 1703, in log_execute\n    ret = self.cursor.execute(*a, **b)\n  File "/usr/lib/python2.7/dist-packages/MySQLdb/cursors.py", line 174, in execute\n    self.errorhandler(self, exc, value)\n  File "/usr/lib/python2.7/dist-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler\n    raise errorclass, errorvalue\nOperationalError: (1050, "Table \'auth_user\' already exists")\n'
+p11
+s.
